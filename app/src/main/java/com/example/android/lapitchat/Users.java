@@ -4,25 +4,27 @@ public class Users {
     public String name;
     public String image;
     public String status;
-    public boolean online;
+    //public String online;
 
-    public boolean isOnline() {
-        return online;
-    }
 
-    public void setOnline(boolean online) {
-        this.online = online;
-    }
 
 
     public Users(){
 
     }
-    public Users(String name, String image, String status) {
+    public Users(String name, String image, String status,String online) {
         this.name = name;
         this.image = image;
         this.status = status;
+        //this.online=online;
     }
+//    public String isOnline() {
+//        return online;
+//    }
+//
+//    public void setOnline(String online) {
+//        this.online = online;
+//    }
 
     public String getName() {
         return name;

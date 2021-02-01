@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -59,13 +60,8 @@ public class UsersActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+                // mUserDatabase.child(user_id).child("online").setValue("true");
 
-            Utils.delay(0.5, new Utils.DelayCallback() {
-                @Override
-                public void afterDelay() {
-                    mUserDatabase.child(user_id).child("online").setValue(true);
-                }
-            });
 
 
 
@@ -79,7 +75,7 @@ public class UsersActivity extends AppCompatActivity {
                 usersViewHolder.setName(users.getName());
                 usersViewHolder.setStatus(users.getStatus());
                 usersViewHolder.setImage(users.getImage());
-                usersViewHolder.setOnline(users.isOnline());
+                //usersViewHolder.setOnline(users.isOnline());
                 final String user_id=getRef(position).getKey();
 
 
@@ -147,19 +143,20 @@ public class UsersActivity extends AppCompatActivity {
                 });
         }
 
-        public void setOnline(boolean online)
+        public void setOnline(String online)
         {
             ImageView onlineImage=(ImageView)mView.findViewById(R.id.user_singlr_online_icon);
-            if(online==true)
-                onlineImage.setVisibility(View.VISIBLE);
-            else
+            if (online.equals("true")) {
                 onlineImage.setVisibility(View.INVISIBLE);
+            } else {
+                onlineImage.setVisibility(View.VISIBLE);
+            }
         }
     }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(mCurrentUser!=null)
-            mUserDatabase.child(user_id).child("online").setValue(false);
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        if(mCurrentUser!=null)
+//            mUserDatabase.child(user_id).child("online").setValue(ServerValue.TIMESTAMP);
+//    }
 }

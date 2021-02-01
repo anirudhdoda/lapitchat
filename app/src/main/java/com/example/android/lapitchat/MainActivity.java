@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -35,18 +37,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
-        mUserRef= FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
-       Toolbar mToolbar=(Toolbar)findViewById(R.id.main_page_toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Lapit Chat");
+        if(mAuth.getCurrentUser() == null) {
+            sendToStart();
+        } else
+            mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+            Toolbar mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setTitle("Lapit Chat");
 
-        mViewpager=(ViewPager)findViewById(R.id.main_tabPager);
-        mSectionsPagerAdapter=new SectionsPagerAdapter(getSupportFragmentManager());
+            mViewpager = (ViewPager) findViewById(R.id.main_tabPager);
+            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        mViewpager.setAdapter(mSectionsPagerAdapter);
+            mViewpager.setAdapter(mSectionsPagerAdapter);
 
-        mTabLayout=(TabLayout)findViewById(R.id.main_tabs);
-        mTabLayout.setupWithViewPager(mViewpager);
+            mTabLayout = (TabLayout) findViewById(R.id.main_tabs);
+            mTabLayout.setupWithViewPager(mViewpager);
     }
     @Override
     public void onStart() {
@@ -59,23 +64,18 @@ public class MainActivity extends AppCompatActivity {
        }
        else{
 
-               Utils.delay(0.5, new Utils.DelayCallback() {
-                   @Override
-                   public void afterDelay() {
-                       mUserRef.child("online").setValue(true);
-                   }
-               });
 
+                       mUserRef.child("online").setValue("true");
        }
     }
 
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(currentUser!=null)
-            mUserRef.child("online").setValue(false);
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        if(currentUser!=null)
+//            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
+//    }
 
     private void sendToStart()
     {
